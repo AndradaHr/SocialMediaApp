@@ -1,5 +1,6 @@
-package com.betfairteam.UserProfile;
+package com.app.project.controller;
 
+import com.app.project.model.User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,7 +13,7 @@ public interface UserController {
     void login(User user);
 
     @GetMapping
-    void getUser(Long id);
+    User getUser(Long id);
 
     @PutMapping
     void updateUser(User user);

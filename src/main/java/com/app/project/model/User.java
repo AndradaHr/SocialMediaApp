@@ -1,4 +1,4 @@
-package com.betfairteam.UserProfile;
+package com.app.project.model;
 
 import jakarta.persistence.*;
 import lombok.*;

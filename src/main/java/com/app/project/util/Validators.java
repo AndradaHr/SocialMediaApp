@@ -1,4 +1,4 @@
-package com.betfairteam.UserProfile;
+package com.app.project.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
