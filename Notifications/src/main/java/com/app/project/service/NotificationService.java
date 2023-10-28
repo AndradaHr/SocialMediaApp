@@ -9,7 +9,8 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
 
-import static com.betfairteam.UserProfile.util.Validators.*;
+import static com.app.project.util.Validators.passwordNumberValidator;
+import static com.app.project.util.Validators.passwordSpecialCharacterValidator;
 
 @Service
 public class NotificationService {

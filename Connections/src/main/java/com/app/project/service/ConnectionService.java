@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
 
-import static com.betfairteam.UserProfile.util.Validators.*;
+import static com.app.project.util.Validators.*;
 
 @Service
 public class ConnectionService {
