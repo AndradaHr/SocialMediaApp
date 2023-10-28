@@ -1,6 +1,6 @@
 package com.app.project.service;
 
-import com.app.project.dao.ConnectionDAO;
+import com.app.project.repository.ConnectionDAO;
 import com.app.project.model.Connection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

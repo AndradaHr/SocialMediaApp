@@ -1,6 +1,6 @@
 package com.app.project.service;
 
-import com.app.project.dao.UserDAO;
+import com.app.project.repository.UserRepository;
 import com.app.project.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import static com.app.project.util.Validators.passwordSpecialCharacterValidator;
 @Service
 public class UserService {
     @Autowired
-    private UserDAO userDAO;
+    private UserRepository userRepository;
 
     public void register(User user) {
         if(!user.getEmail().contains("@")) {
@@ -33,18 +33,18 @@ public class UserService {
         if(Period.between(user.getBirthdate(), LocalDate.now()).getYears() < 18) {
             throw new RuntimeException("You should be at least 18 years old");
         }
-        userDAO.save(user);
+        userRepository.save(user);
     }
 
     public void login(User user) {
-        Optional<User> optionalUser = userDAO.findById(user.getUserId());
+        Optional<User> optionalUser = userRepository.findById(user.getUserId());
         if(optionalUser.isEmpty()) {
             throw new RuntimeException("User not found");
         }
     }
 
     public User getUser(Long id) {
-        Optional<User> optionalUser = userDAO.findById(id);
+        Optional<User> optionalUser = userRepository.findById(id);
         if(optionalUser.isEmpty()) {
             throw new RuntimeException("User not found");
         }
@@ -53,7 +53,7 @@ public class UserService {
     }
 
     public void updateUser(User user) {
-        Optional<User> optionalUser = userDAO.findById(user.getUserId());
+        Optional<User> optionalUser = userRepository.findById(user.getUserId());
         if(optionalUser.isEmpty()) {
             throw new RuntimeException("User not found");
         }

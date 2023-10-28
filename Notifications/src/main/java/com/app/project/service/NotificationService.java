@@ -1,6 +1,6 @@
 package com.app.project.service;
 
-import com.app.project.dao.NotificationDAO;
+import com.app.project.repository.NotificationDAO;
 import com.app.project.model.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

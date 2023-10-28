@@ -1,6 +1,6 @@
 package com.app.project.service;
 
-import com.app.project.dao.ContentDAO;
+import com.app.project.repository.ContentDAO;
 import com.app.project.model.Content;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

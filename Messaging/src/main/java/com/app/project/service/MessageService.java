@@ -1,6 +1,6 @@
 package com.app.project.service;
 
-import com.app.project.dao.MessageDAO;
+import com.app.project.repository.MessageDAO;
 import com.app.project.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

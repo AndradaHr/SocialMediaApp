@@ -1,6 +1,6 @@
 package com.app.project.service;
 
-import com.app.project.dao.CRDAO;
+import com.app.project.repository.CRDAO;
 import com.app.project.model.CR;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

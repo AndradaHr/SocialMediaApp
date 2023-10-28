@@ -1,4 +1,4 @@
-package com.app.project.dao;
+package com.app.project.repository;
 
 import com.app.project.model.CR;
 import org.springframework.data.jpa.repository.JpaRepository;
