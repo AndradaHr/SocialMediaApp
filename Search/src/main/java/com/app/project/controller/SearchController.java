@@ -1,10 +1,10 @@
-package com.app.project.controller.interfaces;
+package com.app.project.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/user")
-public interface SearchController {
+public class SearchController {
 
 }

@@ -1,8 +1,7 @@
 package com.app.project.controller;
 
-import com.app.project.controller.interfaces.CRController;
-import com.app.project.model.CR;
-import com.app.project.service.CRService;
+import com.app.project.model.Content;
+import com.app.project.service.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,32 +9,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/user")
-public class CRControllerImpl implements CRController {
+public class ContentController {
     @Autowired
-    private CRService userService;
+    private ContentService userService;
 
-    @PostMapping
-    public void register(CR user) {
+    @PostMapping("/register")
+    public void register(Content user) {
         userService.register(user);
     }
 
-    @PostMapping
-    public void login(CR user) {
+    @PostMapping("/login")
+    public void login(Content user) {
         userService.login(user);
     }
 
-    @Override
-    public CR getUser(Long id) {
+    public Content getUser(Long id) {
         return userService.getUser(id);
     }
 
-    @Override
-    public void updateUser(CR user) {
+    public void updateUser(Content user) {
 
     }
 
-    @Override
-    public void deleteUser(CR user) {
+    public void deleteUser(Content user) {
 
     }
 }
