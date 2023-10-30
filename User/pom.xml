@@ -72,7 +72,18 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<version>3.1.5</version>
 		</dependency>
+		<!-- Google Cloud Storage -->
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-storage</artifactId>
+			<version/>
+		</dependency>
 
+		<!-- Spring Web for File Upload -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>

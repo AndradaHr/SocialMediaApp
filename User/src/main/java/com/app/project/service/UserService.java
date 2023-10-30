@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
+import java.util.Base64;
 import java.util.function.Predicate;
 
 @Service
@@ -28,6 +29,19 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
+    public void changePassword(Long encodedUserId, String oldPassword, String newPassword) {
+        Long userIdTrue=Long.parseLong( new String(Base64.getDecoder().decode(String.valueOf(encodedUserId))));
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        User user = userRepository.findById(userIdTrue)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (passwordEncoder.matches(user.getPassword(), oldPassword)) {
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+        }
+
+
+    }
 
     private void checkIfValueInUse(String value, String errorMessage, Predicate<String> checkFunction) {
         if (value != null && checkFunction.test(value)) {
@@ -44,6 +58,7 @@ public class UserService {
                 .subscribeOn(Schedulers.boundedElastic())
                 .delayElements(Duration.ofSeconds(1));
     }
+
 
     private boolean isEmailInUse(String email) {
         return findByEmail(email) != null;
