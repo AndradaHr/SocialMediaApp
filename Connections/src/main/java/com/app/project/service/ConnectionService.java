@@ -1,6 +1,6 @@
 package com.app.project.service;
 
-import com.app.project.repository.ConnectionDAO;
+import com.app.project.repository.ConnectionRepository;
 import com.app.project.model.Connection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import static com.app.project.util.Validators.*;
 @Service
 public class ConnectionService {
     @Autowired
-    private ConnectionDAO userDAO;
+    private ConnectionRepository userDAO;
 
     public void register(Connection user) {
         if(!user.getEmail().contains("@")) {

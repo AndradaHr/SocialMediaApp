@@ -3,38 +3,33 @@ package com.app.project.controller;
 import com.app.project.model.Message;
 import com.app.project.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("api/user")
+@RequestMapping("api/messages")
 public class MessagesController {
     @Autowired
-    private MessageService userService;
+    private MessageService messageService;
 
-    @PostMapping("/register")
-    public void register(Message user) {
-        userService.register(user);
+    @PostMapping("/send")
+    public Message sendMessage(@RequestBody Message message) {
+        return messageService.sendMessage(message);
     }
 
-    @PostMapping("/login")
-    public void login(Message user) {
-        userService.login(user);
+    @GetMapping("/user/{username}")
+    public List<Message> getMessagesForUser(@PathVariable String username) {
+        return messageService.getMessagesForUser(username);
     }
 
-
-    public Message getUser(Long id) {
-        return userService.getUser(id);
+    @PostMapping("/read/{id}")
+    public Message readMessage(@PathVariable Long id) {
+        return messageService.readMessage(id);
     }
 
-
-    public void updateUser(Message user) {
-
-    }
-
-
-    public void deleteUser(Message user) {
-
+    @DeleteMapping("/delete/{id}")
+    public void deleteMessage(@PathVariable Long id) {
+        messageService.deleteMessage(id);
     }
 }

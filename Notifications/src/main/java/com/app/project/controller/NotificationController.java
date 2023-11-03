@@ -3,38 +3,38 @@ package com.app.project.controller;
 import com.app.project.model.Notification;
 import com.app.project.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("api/user")
+@RequestMapping("api/notification")
 public class NotificationController {
     @Autowired
-    private NotificationService userService;
+    private NotificationService notificationService;
 
-    @PostMapping("/register")
-    public void register(Notification user) {
-        userService.register(user);
+    @PostMapping
+    public Mono<Notification> createNotification(@RequestBody Notification notification) {
+        return notificationService.createNotification(notification);
     }
 
-    @PostMapping("/login")
-    public void login(Notification user) {
-        userService.login(user);
+    @GetMapping("/{id}")
+    public Mono<Notification> getNotification(@PathVariable Long id) {
+        return notificationService.getNotification(id);
     }
 
-
-    public Notification getUser(Long id) {
-        return userService.getUser(id);
+    @GetMapping
+    public Flux<Notification> getAllNotifications() {
+        return notificationService.getAllNotifications();
     }
 
-
-    public void updateUser(Notification user) {
-
+    @PutMapping("/{id}")
+    public Mono<Notification> updateNotification(@PathVariable Long id, @RequestBody Notification notification) {
+        return notificationService.updateNotification(id, notification);
     }
 
-
-    public void deleteUser(Notification user) {
-
+    @DeleteMapping("/{id}")
+    public Mono<Void> deleteNotification(@PathVariable Long id) {
+        return notificationService.deleteNotification(id);
     }
 }

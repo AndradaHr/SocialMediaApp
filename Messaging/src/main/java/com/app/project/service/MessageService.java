@@ -1,61 +1,38 @@
 package com.app.project.service;
 
-import com.app.project.repository.MessageDAO;
+import com.app.project.repository.MessageRepository;
 import com.app.project.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.Optional;
-
-import static com.app.project.util.Validators.passwordNumberValidator;
-import static com.app.project.util.Validators.passwordSpecialCharacterValidator;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class MessageService {
     @Autowired
-    private MessageDAO userDAO;
+    private MessageRepository messageRepository;
 
-    public void register(Message user) {
-        if(!user.getEmail().contains("@")) {
-            throw new RuntimeException("Invalid email");
-        }
-        if(user.getPassword().length() < 8) {
-            throw new RuntimeException("Password too short");
-        }
-        if(!passwordSpecialCharacterValidator(user.getPassword())){
-            throw new RuntimeException("Password should contain special characters");
-        }
-        if(!passwordNumberValidator(user.getPassword())){
-            throw new RuntimeException("Password should contain numbers");
-        }
-        if(Period.between(user.getBirthdate(), LocalDate.now()).getYears() < 18) {
-            throw new RuntimeException("You should be at least 18 years old");
-        }
-        userDAO.save(user);
+    public Message sendMessage(Message message) {
+        message.setTimestamp(LocalDateTime.now());
+        message.setIsRead(false);
+        return messageRepository.save(message);
     }
 
-    public void login(Message user) {
-        Optional<Message> optionalUser = userDAO.findById(user.getUserId());
-        if(optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found");
-        }
+    public List<Message> getMessagesForUser(String username) {
+        return messageRepository.findByReceiver(username);
     }
 
-    public Message getUser(Long id) {
-        Optional<Message> optionalUser = userDAO.findById(id);
-        if(optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found");
-        }
-
-        return optionalUser.get();
+    public Message readMessage(Long id) {
+        Message message = messageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Message not found"));
+        message.setIsRead(true);
+        return messageRepository.save(message);
     }
 
-    public void updateUser(Message user) {
-        Optional<Message> optionalUser = userDAO.findById(user.getUserId());
-        if(optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found");
-        }
+    public void deleteMessage(Long id) {
+        Message message = messageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Message not found"));
+        messageRepository.delete(message);
     }
 }

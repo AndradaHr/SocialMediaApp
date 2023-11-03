@@ -1,9 +1,9 @@
 package com.app.project.repository;
 
-import com.app.project.model.CR;
+import com.app.project.model.Connection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CRDAO extends JpaRepository<CR, Long> {
+public interface ConnectionRepository extends JpaRepository<Connection, Long> {
 }
