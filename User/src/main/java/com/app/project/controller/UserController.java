@@ -43,6 +43,13 @@ public class UserController {
         userService.changePassword(encodedUserId, request.getOldPassword(), request.getNewPassword());
     }
 
+    @PatchMapping("/{encodedUserId}/forgot-password")
+    public void forgotPassword(
+            @PathVariable Long encodedUserId, @RequestBody PasswordChangeRequest request){
+        userService.forgotPassword(encodedUserId, request.getNewPassword());
+    }
+
+
     public void updateUser(User user) {
 
     }

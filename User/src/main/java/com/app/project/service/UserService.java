@@ -42,6 +42,14 @@ public class UserService {
 
 
     }
+    public void forgotPassword(Long encodedUserId, String newPassword) {
+        Long userIdTrue=Long.parseLong( new String(Base64.getDecoder().decode(String.valueOf(encodedUserId))));
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        User user = userRepository.findById(userIdTrue)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
 
     private void checkIfValueInUse(String value, String errorMessage, Predicate<String> checkFunction) {
         if (value != null && checkFunction.test(value)) {
@@ -73,15 +81,15 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return  Mono.just(userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Incorrect email"))).block();
     }
 
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return Mono.just(userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Incorrect username"))).block();
     }
 
     public User findByPhoneNumber(String phoneNumber) {
-        return userRepository.findByPhoneNumber(phoneNumber);
+        return Mono.just(userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new RuntimeException("Incorrect phone number"))).block();
     }
 
 }

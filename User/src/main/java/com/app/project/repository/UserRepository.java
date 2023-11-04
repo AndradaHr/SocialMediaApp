@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -38,11 +39,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 //        return resultList.isEmpty() ? null : resultList.get(0);
 //    }
     @Query("SELECT u FROM User u WHERE u.username = :username")
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     @Query("SELECT u FROM User u WHERE u.phoneNumber = :phoneNumber")
-    User findByPhoneNumber(String phoneNumber);
+    Optional<User> findByPhoneNumber(String phoneNumber);
 
     @Query("SELECT u FROM User u WHERE u.email = :email")
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 }
