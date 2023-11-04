@@ -1,36 +1,29 @@
 package com.app.project.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table
+@Table(name = "notifications")
 @Entity
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
-    @NonNull
-    private String username;
-    @NonNull
-    private String password;
-    @NonNull
-    private String email;
-    @NonNull
-    private Boolean status;
-    private String firstName;
-    private String lastName;
-    private String bio;
-    @NonNull
-    private LocalDate birthdate;
-    private String phoneNumber;
-    @NonNull
-    private String language;
-    @NonNull
-    private Boolean isPrivate;
+    private Long id;
+    private String title;
+    private String message;
+    private LocalDateTime dateTime;
+    private Boolean isRead;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private long userId;
 }

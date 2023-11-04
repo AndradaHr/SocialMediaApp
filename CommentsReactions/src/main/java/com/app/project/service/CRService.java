@@ -1,6 +1,6 @@
 package com.app.project.service;
 
-import com.app.project.repository.CRDAO;
+import com.app.project.repository.CRRepository;
 import com.app.project.model.CR;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import static com.app.project.util.Validators.passwordSpecialCharacterValidator;
 @Service
 public class CRService {
     @Autowired
-    private CRDAO userDAO;
+    private CRRepository userDAO;
 
     public void register(CR user) {
         if(!user.getEmail().contains("@")) {

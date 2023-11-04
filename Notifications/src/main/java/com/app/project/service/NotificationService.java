@@ -1,61 +1,47 @@
 package com.app.project.service;
 
-import com.app.project.repository.NotificationDAO;
 import com.app.project.model.Notification;
+import com.app.project.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.Optional;
-
-import static com.app.project.util.Validators.passwordNumberValidator;
-import static com.app.project.util.Validators.passwordSpecialCharacterValidator;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class NotificationService {
     @Autowired
-    private NotificationDAO userDAO;
+    private NotificationRepository notificationRepository;
 
-    public void register(Notification user) {
-        if(!user.getEmail().contains("@")) {
-            throw new RuntimeException("Invalid email");
-        }
-        if(user.getPassword().length() < 8) {
-            throw new RuntimeException("Password too short");
-        }
-        if(!passwordSpecialCharacterValidator(user.getPassword())){
-            throw new RuntimeException("Password should contain special characters");
-        }
-        if(!passwordNumberValidator(user.getPassword())){
-            throw new RuntimeException("Password should contain numbers");
-        }
-        if(Period.between(user.getBirthdate(), LocalDate.now()).getYears() < 18) {
-            throw new RuntimeException("You should be at least 18 years old");
-        }
-        userDAO.save(user);
+    public Mono<Notification> createNotification(Notification notification) {
+        return Mono.just(notificationRepository.save(notification));
     }
 
-    public void login(Notification user) {
-        Optional<Notification> optionalUser = userDAO.findById(user.getUserId());
-        if(optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found");
-        }
+    public Mono<Notification> getNotification(Long id) {
+        return Mono.justOrEmpty(notificationRepository.findById(id));
     }
 
-    public Notification getUser(Long id) {
-        Optional<Notification> optionalUser = userDAO.findById(id);
-        if(optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found");
-        }
-
-        return optionalUser.get();
+    public Flux<Notification> getAllNotifications() {
+        return Flux.fromIterable(notificationRepository.findAll());
     }
 
-    public void updateUser(Notification user) {
-        Optional<Notification> optionalUser = userDAO.findById(user.getUserId());
-        if(optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found");
-        }
+    public Mono<Notification> updateNotification(Long id, Notification notificationDetails) {
+        return Mono.justOrEmpty(notificationRepository.findById(id))
+                .map(notification -> {
+                    notification.setTitle(notificationDetails.getTitle());
+                    notification.setMessage(notificationDetails.getMessage());
+                    notification.setDateTime(notificationDetails.getDateTime());
+                    notification.setIsRead(notificationDetails.getIsRead());
+                    notification.setUser(notificationDetails.getUser());
+                    return notificationRepository.save(notification);
+                });
+    }
+
+    public Mono<Void> deleteNotification(Long id) {
+        return Mono.justOrEmpty(notificationRepository.findById(id))
+                .map(notification -> {
+                    notificationRepository.delete(notification);
+                    return notification;
+                })
+                .then(Mono.empty());
     }
 }

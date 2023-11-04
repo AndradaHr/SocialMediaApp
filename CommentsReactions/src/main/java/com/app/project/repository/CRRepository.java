@@ -1,9 +1,9 @@
 package com.app.project.repository;
 
-import com.app.project.model.Notification;
+import com.app.project.model.CR;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface NotificationDAO extends JpaRepository<Notification, Long> {
+public interface CRRepository extends JpaRepository<CR, Long> {
 }
