@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PasswordChangeRequest {
-    @JsonProperty("oldPassword")
-    private String oldPassword;
-    @JsonProperty("newPassword")
-    private String newPassword;
+public class PasswordForgottenRequest {
+    @JsonProperty("email")
+    private String email;
 }

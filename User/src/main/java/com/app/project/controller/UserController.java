@@ -41,19 +41,31 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @PatchMapping("/{encodedUserId}/change-password")
+    @GetMapping("/{userId}/change-password")
     public void changePassword(
-            @PathVariable Long encodedUserId,
-            @RequestBody PasswordChangeRequest request) {
+            @PathVariable Long userId){
 
-        userService.changePassword(encodedUserId, request.getOldPassword(), request.getNewPassword());
+        userService.changePassword(userId);
+    }
+    @PostMapping("/{userId}/change-password")
+    public void changePassword(
+            @PathVariable Long userId, @RequestBody PasswordChangeRequest request){
+
+        userService.changePasswordChange(userId, request.getOldPassword(), request.getNewPassword());
     }
 
-    @PatchMapping("/{encodedUserId}/forgot-password")
+    @GetMapping("/forgot-password/{userId}")
     public void forgotPassword(
-            @PathVariable Long encodedUserId, @RequestBody PasswordChangeRequest request){
-        userService.forgotPassword(encodedUserId, request.getNewPassword());
+            @PathVariable Long userId, @RequestBody PasswordForgottenRequest request){
+        userService.forgotPassword(userId, request.getEmail());
     }
+    @PostMapping("/forgot-password/{userId}")
+    public void forgotPasswordChange(
+            @PathVariable Long userId, @RequestBody PasswordChangeRequest request){
+        userService.forgotPasswordChange(userId, request.getNewPassword());
+    }
+
+
 
 
     public void updateUser(User user) {

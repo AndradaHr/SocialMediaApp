@@ -13,7 +13,7 @@ public class SecurityConfig {
         ApiJsonWebTokenFilter apiJsonWebTokenFilter = new ApiJsonWebTokenFilter();
         registrationBean.setFilter(apiJsonWebTokenFilter);
         registrationBean.addUrlPatterns("/api/*");
-        registrationBean.addInitParameter("excludedPaths", "/api/login,/api/user/register,/api/user/{encodedUserId}/change-password");
+        registrationBean.addInitParameter("excludedPaths", "/api/login,/api/user/register,/api/user/{userId}/change-password,/api/user/forgot-password/*");
 
         return registrationBean;
     }
