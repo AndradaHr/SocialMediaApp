@@ -12,6 +12,7 @@ import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
 import java.util.Base64;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 @Service
@@ -20,14 +21,14 @@ public class UserService {
     private UserRepository userRepository;
 
 
-    public void saveUser(@NonNull User user) {
+    public User saveUser(@NonNull User user) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         checkIfValueInUse(user.getUsername(), "Username already in use", this::isUsernameInUse);
         checkIfValueInUse(user.getPhoneNumber(), "Phone number is already in use", this::isPhoneNumberInUse);
         checkIfValueInUse(user.getEmail(), "Email already in use", this::isEmailInUse);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        return userRepository.save(user);
     }
     public void changePassword(Long encodedUserId, String oldPassword, String newPassword) {
         Long userIdTrue=Long.parseLong( new String(Base64.getDecoder().decode(String.valueOf(encodedUserId))));
@@ -81,15 +82,18 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
-        return  Mono.just(userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Incorrect email"))).block();
+        Optional<User> usern = userRepository.findByUsername(email);
+        return usern.orElse(null);
     }
 
     public User findByUsername(String username) {
-        return Mono.just(userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Incorrect username"))).block();
+        Optional<User> usern = userRepository.findByUsername(username);
+        return usern.orElse(null);
     }
 
     public User findByPhoneNumber(String phoneNumber) {
-        return Mono.just(userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new RuntimeException("Incorrect phone number"))).block();
+        Optional<User> usern = userRepository.findByUsername(phoneNumber);
+        return usern.orElse(null);
     }
 
 }

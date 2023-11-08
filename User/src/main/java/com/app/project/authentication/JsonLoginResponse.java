@@ -1,5 +1,6 @@
 package com.app.project.authentication;
 
+import com.app.project.model.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class JsonLoginResponse {
     @JsonProperty("token")
     private String token;
+     private User user;
 }

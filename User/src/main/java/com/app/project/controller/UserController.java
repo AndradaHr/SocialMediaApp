@@ -1,13 +1,17 @@
 package com.app.project.controller;
 
 
+import com.app.project.authentication.JsonLoginResponse;
 import com.app.project.model.User;
 import com.app.project.service.UserService;
 import lombok.NonNull;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import static com.app.project.authentication.LoginController.createJWT;
 
 @RestController
 @RequestMapping("api/user")
@@ -20,8 +24,10 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public void saveUser(@RequestBody @NonNull final User request) {
-        userService.saveUser(request);
+    public Mono<ResponseEntity<JsonLoginResponse>> saveUser(@RequestBody @NonNull final User request) {
+        var user= userService.saveUser(request);
+        String token = String.valueOf(createJWT(user.getUserId().toString(), user.getEmail(), 999999999));
+        return Mono.just(ResponseEntity.ok(new JsonLoginResponse(token,user)));
     }
 
 

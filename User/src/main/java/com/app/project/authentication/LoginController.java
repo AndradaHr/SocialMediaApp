@@ -45,7 +45,7 @@ public class LoginController {
 
         if (user != null && passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             String token = String.valueOf(createJWT(user.getUserId().toString(), user.getEmail(), 999999999));
-            return Mono.just(ResponseEntity.ok(new JsonLoginResponse(token)));
+            return Mono.just(ResponseEntity.ok(new JsonLoginResponse(token, user)));
         } else {
             return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null));
         }
