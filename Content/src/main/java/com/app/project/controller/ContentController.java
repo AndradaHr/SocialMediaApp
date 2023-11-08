@@ -1,17 +1,20 @@
 package com.app.project.controller;
 
 import com.app.project.model.Content;
+import com.app.project.model.Post;
 import com.app.project.service.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping("api/user")
 public class ContentController {
     @Autowired
     private ContentService userService;
+    @Autowired
+    private ContentService contentService;
+
 
     @PostMapping("/register")
     public void register(Content user) {
@@ -23,9 +26,6 @@ public class ContentController {
         userService.login(user);
     }
 
-    public Content getUser(Long id) {
-        return userService.getUser(id);
-    }
 
     public void updateUser(Content user) {
 
@@ -34,4 +34,14 @@ public class ContentController {
     public void deleteUser(Content user) {
 
     }
+    @GetMapping("/{userId}/recommended")
+    public Flux<Post> getRecommendedPosts(@PathVariable Long userId) {
+        return contentService.getRecommendedPosts(userId);
+    }
+
+    @GetMapping("/{userId}/suggested")
+    public Flux<Post> getSuggestedPosts(@PathVariable Long userId) {
+        return contentService.getSuggestedPosts(userId);
+    }
 }
+
