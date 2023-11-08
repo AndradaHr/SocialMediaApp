@@ -24,9 +24,9 @@ public class Post {
     @Column(nullable = false, length = 5000)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", referencedColumnName = "userId")
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "user_id", referencedColumnName = "userId")
+//    private User user;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
