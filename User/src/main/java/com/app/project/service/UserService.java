@@ -151,6 +151,20 @@ public class UserService {
 
     }
 
+    public User updateUser(User user) {
+        if (!userRepository.existsById(user.getUserId())) {
+            throw new RuntimeException("User not found with id: " + user.getUserId());
+        }
+        return userRepository.save(user);
+    }
+
+    public void deleteUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new RuntimeException("User not found with id: " + userId);
+        }
+        userRepository.deleteById(userId);
+    }
+
 
 
 }

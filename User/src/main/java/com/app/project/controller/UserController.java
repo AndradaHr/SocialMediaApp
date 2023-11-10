@@ -65,14 +65,15 @@ public class UserController {
         userService.forgotPasswordChange(userId, request.getNewPassword());
     }
 
-
-
-
-    public void updateUser(User user) {
-
+    @PutMapping("/update")
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
+        return ResponseEntity.ok(userService.updateUser(user));
     }
 
-    public void deleteUser(User user) {
-
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
+        return ResponseEntity.ok().build();
     }
+
 }
