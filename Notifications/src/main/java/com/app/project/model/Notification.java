@@ -23,7 +23,5 @@ public class Notification {
     private String message;
     private LocalDateTime dateTime;
     private Boolean isRead;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private long userId;
+    private Long userId;
 }

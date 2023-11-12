@@ -1,9 +1,9 @@
 package com.app.project.service;
 
-import com.app.project.controller.ContentResponse;
-import com.app.project.model.Content;
+import com.app.project.controller.StoryResponse;
+import com.app.project.model.Story;
 import com.app.project.model.User;
-import com.app.project.repository.ContentRepository;
+import com.app.project.repository.StoryRepository;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -14,38 +14,30 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
+
 @Service
-public class ContentService {
+public class StoryService {
+
     @Autowired
     private WebClient webClient;
 
     @Autowired
-    private ContentRepository contentRepository;
+    private StoryRepository storyRepository;
 
-    public Flux<ContentResponse> getSuggestedPosts(@NonNull Long userId) {
-        return Flux.merge(getUserFriends(userId).map(this::getPosts));
-    }
+    public Flux<StoryResponse> getStories(Long userId) {
+        LocalDateTime timeLimit = LocalDateTime.now().minusHours(24);
 
-    public Flux<ContentResponse> getPosts(Long userId) {
         return getUserFriends(userId)
                 .flatMap(friendId ->
                         getUser(friendId)
-                                .zipWith(Mono.just(contentRepository.findByUserId(friendId)))
-                                .map(tuple -> {
-                                    User user = tuple.getT1();
-                                    Content content = (Content) tuple.getT2();
-                                    return mapToContentResponse(content, user);
-                                }));
-    }
-
-    private ContentResponse mapToContentResponse(Content content, User userEntity) {
-        return ContentResponse.builder()
-                .contentId(content.getContentId())
-                .user(userEntity)
-                .photo(content.getPhoto())
-                .datePosted(content.getDatePosted())
-                .description(content.getDescription())
-                .build();
+                                .flatMapMany(user ->
+                                        Flux.fromIterable(storyRepository.findByUserId(friendId))
+                                                .filter(story -> story.getDatePosted().isAfter(ChronoLocalDate.from(timeLimit))) // Filter stories newer than 24 hours
+                                                .map(story -> mapToStoryResponse(story, user))
+                                )
+                );
     }
 
 
@@ -65,6 +57,15 @@ public class ContentService {
         });
     }
 
+    private StoryResponse mapToStoryResponse(Story story, User userEntity) {
+        return StoryResponse.builder()
+                .storyId(story.getStoryId())
+                .datePosted(story.getDatePosted())
+                .photo(story.getPhoto())
+                .user(userEntity)
+                .build();
+    }
+
     private Mono<User> getUser(@NonNull Long userId) {
         var webRequest = webClient
                 .get()
@@ -82,5 +83,3 @@ public class ContentService {
         });
     }
 }
-
-

@@ -19,7 +19,7 @@ public class MessagesController {
     }
 
     @GetMapping("/user/{username}")
-    public List<Message> getMessagesForUser(@PathVariable String username) {
+    public List<Message> getMessagesForUser(@PathVariable Long username) {
         return messageService.getMessagesForUser(username);
     }
 

@@ -31,7 +31,6 @@ public class NotificationService {
                     notification.setMessage(notificationDetails.getMessage());
                     notification.setDateTime(notificationDetails.getDateTime());
                     notification.setIsRead(notificationDetails.getIsRead());
-                    notification.setUser(notificationDetails.getUser());
                     return notificationRepository.save(notification);
                 });
     }

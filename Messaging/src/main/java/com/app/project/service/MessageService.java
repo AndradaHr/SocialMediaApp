@@ -19,7 +19,7 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    public List<Message> getMessagesForUser(String username) {
+    public List<Message> getMessagesForUser(Long username) {
         return messageRepository.findByReceiver(username);
     }
 

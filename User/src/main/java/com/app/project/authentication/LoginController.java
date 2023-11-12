@@ -76,7 +76,7 @@ public class LoginController {
         return builder.compact();
     }
 
-    public static void decodeJWT(String jwt) {
+    public static Claims decodeJWT(String jwt) {
         byte[] apiKeySecretBytes = Base64.getDecoder().decode(SECRET_KEY);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
 
@@ -85,6 +85,6 @@ public class LoginController {
                 .build()
                 .parseClaimsJws(jwt);
 
-        jws.getBody();
+       return jws.getBody();
     }
 }

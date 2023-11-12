@@ -6,6 +6,10 @@ import com.mailgun.api.v3.MailgunMessagesApi;
 import com.mailgun.client.MailgunClient;
 import com.mailgun.model.message.Message;
 import com.mailgun.model.message.MessageResponse;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,7 +18,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -23,7 +30,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-
+    private static final String SECRET_KEY = "ssdjfjfjfjrfffffssdjfjfjfjrfffffssdjfjfjff3422";
     public User saveUser(@NonNull User user) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -64,6 +71,17 @@ public class UserService {
                 .delayElements(Duration.ofSeconds(1));
     }
 
+    public static Claims decodeJWT(String jwt) {
+        byte[] apiKeySecretBytes = Base64.getDecoder().decode(SECRET_KEY);
+        Key signingKey = new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
+
+        Jws<io.jsonwebtoken.Claims> jws = Jwts.parserBuilder()
+                .setSigningKey(signingKey)
+                .build()
+                .parseClaimsJws(jwt);
+        // Return the body containing the claims
+        return (Claims) jws.getBody();
+    }
 
     private boolean isEmailInUse(String email) {
         return findByEmail(email) != null;
@@ -166,5 +184,10 @@ public class UserService {
     }
 
 
+
+
+    public Mono<User> findById(Long id){
+        return Mono.just(userRepository.findById(id).get());
+    }
 
 }

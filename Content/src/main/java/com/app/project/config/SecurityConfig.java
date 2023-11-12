@@ -1,5 +1,4 @@
 package com.app.project.config;
-
 import com.app.project.authentication.ApiJsonWebTokenFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -12,8 +11,8 @@ public class SecurityConfig {
         FilterRegistrationBean<ApiJsonWebTokenFilter> registrationBean = new FilterRegistrationBean<>();
         ApiJsonWebTokenFilter apiJsonWebTokenFilter = new ApiJsonWebTokenFilter();
         registrationBean.setFilter(apiJsonWebTokenFilter);
-        registrationBean.addUrlPatterns("/api/*");
-        registrationBean.addInitParameter("excludedPaths", "/api/login,/api/user/register,/api/user/{userId}/change-password,/api/user/forgot-password/*,/api/user/getSession");
+        registrationBean.addUrlPatterns("");
+        registrationBean.addInitParameter("excludedPaths", "/api/content/getFeedPosts/*");
 
         return registrationBean;
     }

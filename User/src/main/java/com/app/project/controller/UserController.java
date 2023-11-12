@@ -2,8 +2,10 @@ package com.app.project.controller;
 
 
 import com.app.project.authentication.JsonLoginResponse;
+import com.app.project.authentication.LoginController;
 import com.app.project.model.User;
 import com.app.project.service.UserService;
+import jakarta.websocket.server.PathParam;
 import lombok.NonNull;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import static com.app.project.authentication.LoginController.createJWT;
 
 @RestController
 @RequestMapping("api/user")
+@CrossOrigin
 public class UserController {
 
     private final UserService userService;
@@ -30,7 +33,10 @@ public class UserController {
         return Mono.just(ResponseEntity.ok(new JsonLoginResponse(token,user)));
     }
 
-
+    @GetMapping("/getSession/{userId}")
+    public Mono<User> getSession(@PathVariable Long userId){
+        return userService.findById(userId);
+    }
     @GetMapping(value = "/getUserWithId:{id}")
     public Mono<User> getUser(@PathVariable Long id) throws Exception {
         return userService.getUser(id);
@@ -73,6 +79,14 @@ public class UserController {
     @DeleteMapping("/delete/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/updateProfilePicture")
+    public ResponseEntity<?>updateProfilePicture(@RequestBody UpdateProfilePictureRequest request){
+        var user= userService.findById(request.id).block();
+        user.setProfilePicture(request.photoLink);
+        userService.saveUser(user);
         return ResponseEntity.ok().build();
     }
 

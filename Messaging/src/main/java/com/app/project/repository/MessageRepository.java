@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Query("SELECT u FROM Message u WHERE u.receiver = :receiver")
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    List<Message> findByReceiver(String receiver);
+    @Query("SELECT u FROM Message u WHERE u.receiverId = :receiver")
+    List<Message> findByReceiver(Long receiver);
 }
