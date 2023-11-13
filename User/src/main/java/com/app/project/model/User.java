@@ -28,7 +28,6 @@ public class User {
     @NonNull
     private String email;
 
-    @NonNull
     private Boolean status;
     private String firstName;
     private String lastName;
@@ -38,12 +37,12 @@ public class User {
     private LocalDate birthdate;
 
     @Column(unique = true)
+    @NonNull
     private String phoneNumber;
 
-    @NonNull
-    private String language;
-    @NonNull
-    private Boolean isPrivate;
+
+    private String language = "EN";
+    private Boolean isPrivate = Boolean.TRUE;
 
     private String profilePicture;
 }

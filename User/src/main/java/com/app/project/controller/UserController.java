@@ -27,8 +27,8 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public Mono<ResponseEntity<JsonLoginResponse>> saveUser(@RequestBody @NonNull final User request) {
-        var user= userService.saveUser(request);
+    public Mono<ResponseEntity<JsonLoginResponse>> saveUser(@RequestBody @NonNull final UserRegisterRequest request) {
+        var user= userService.saveUserRegister(request);
         String token = String.valueOf(createJWT(user.getUserId().toString(), user.getEmail(), 999999999));
         return Mono.just(ResponseEntity.ok(new JsonLoginResponse(token,user)));
     }
