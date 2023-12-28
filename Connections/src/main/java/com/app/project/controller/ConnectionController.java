@@ -42,7 +42,12 @@ public class ConnectionController {
     }
 
     @GetMapping("/getSuggestedFriends/{userId}")
-    public Flux<SuggestedFriendsResponse> getSuggestedFriends(@PathVariable Long userId){
+    public Flux<SuggestedFriendsResponse> getSuggestedFriends(@PathVariable Long userId) {
         return userService.getSuggestedFriends(userId);
+    }
+
+    @GetMapping("/getFirstTimePostsAndRecommendations")
+    public Flux<User> getNoFollowingSuggestedFriends() {
+        return userService.getRandomUsers();
     }
 }

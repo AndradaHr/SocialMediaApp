@@ -8,8 +8,8 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoRepositories
 public class ConnectionsProjectApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ConnectionsProjectApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ConnectionsProjectApplication.class, args);
+    }
 
 }

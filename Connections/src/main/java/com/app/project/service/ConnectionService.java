@@ -102,7 +102,6 @@ public class ConnectionService {
     }
 
 
-
     private Mono<User> getUser(@NonNull Long userId) {
         var webRequest = webClient
                 .get()
@@ -118,5 +117,28 @@ public class ConnectionService {
                         .flatMap(body -> Mono.error(new RuntimeException("Request failed:" + body)));
             }
         });
+    }
+
+    public Flux<User> getRandomUsers() {
+        List<User> randomUsers = new ArrayList<>();
+        List<Long> randomUsersIds = generateRandomIds();
+        for (Long id : randomUsersIds) {
+            User user = getUser(id).block();
+            if (user != null) {
+                randomUsers.add(user);
+            }
+        }
+        return Flux.fromIterable(randomUsers);
+    }
+
+    private List<Long> generateRandomIds() {
+        Random random = new Random();
+        List<Long> randomUserId = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Long randomNumber = (long) random.nextInt(1, 5);
+            randomUserId.add(randomNumber);
+        }
+
+        return randomUserId;
     }
 }
