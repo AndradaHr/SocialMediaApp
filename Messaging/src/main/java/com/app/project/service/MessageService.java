@@ -1,38 +1,47 @@
 package com.app.project.service;
 
-import com.app.project.repository.MessageRepository;
 import com.app.project.model.Message;
+import com.app.project.repository.MessageRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class MessageService {
+
+    private final MessageRepository messageRepository;
+
     @Autowired
-    private MessageRepository messageRepository;
+    public MessageService(MessageRepository messageRepository) {
+        this.messageRepository = messageRepository;
+    }
 
-    public Message sendMessage(Message message) {
-        message.setTimestamp(LocalDateTime.now());
-        message.setIsRead(false);
+    public List<Message> getMessagesBetweenUsers(Long senderId, Long receiverId) {
+        return messageRepository.findBySenderAndReceiver(senderId, receiverId);
+    }
+
+    public Message updateMessageReadStatus(Long messageId, Boolean isRead) {
+        Message message = messageRepository.findById(messageId)
+                .orElseThrow(() -> new EntityNotFoundException("Message not found"));
+        message.setIsRead(isRead);
         return messageRepository.save(message);
     }
 
-    public List<Message> getMessagesForUser(Long username) {
-        return messageRepository.findByReceiver(username);
-    }
-
-    public Message readMessage(Long id) {
-        Message message = messageRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Message not found"));
-        message.setIsRead(true);
+    public Message updateMessageContent(Long messageId, String newContent) {
+        Message message = messageRepository.findById(messageId)
+                .orElseThrow(() -> new EntityNotFoundException("Message not found"));
+        message.setContent(newContent);
+        message.setIsEdited(true);
         return messageRepository.save(message);
     }
 
-    public void deleteMessage(Long id) {
-        Message message = messageRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Message not found"));
-        messageRepository.delete(message);
+    public void deleteMessage(Long messageId) {
+        messageRepository.deleteById(messageId);
+    }
+
+    public Message saveMessage(Message message) {
+        return messageRepository.save(message);
     }
 }

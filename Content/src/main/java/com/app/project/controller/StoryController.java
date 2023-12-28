@@ -13,7 +13,12 @@ public class StoryController {
     private StoryService storyService;
 
     @GetMapping("/getFeedStories/{userId}")
-    public Flux<StoryResponse> getFeedStories(@PathVariable Long userId){
+    public Flux<StoryResponse> getFeedStories(@PathVariable Long userId) {
         return storyService.getStories(userId);
+    }
+
+    @GetMapping("/getRandomFeedStories")
+    public Flux<StoryResponse> getRandomFeedStories() {
+        return storyService.getRandomStories();
     }
 }

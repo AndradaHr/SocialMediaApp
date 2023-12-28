@@ -16,6 +16,9 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Service
 public class StoryService {
@@ -30,6 +33,20 @@ public class StoryService {
         LocalDateTime timeLimit = LocalDateTime.now().minusHours(24);
 
         return getUserFriends(userId)
+                .flatMap(friendId ->
+                        getUser(friendId)
+                                .flatMapMany(user ->
+                                        Flux.fromIterable(storyRepository.findByUserId(friendId))
+                                                .filter(story -> story.getDatePosted().isAfter(ChronoLocalDate.from(timeLimit))) // Filter stories newer than 24 hours
+                                                .map(story -> mapToStoryResponse(story, user))
+                                )
+                );
+    }
+
+    public Flux<StoryResponse> getRandomStories() {
+        LocalDateTime timeLimit = LocalDateTime.now().minusHours(24);
+
+        return generateRandomIds()
                 .flatMap(friendId ->
                         getUser(friendId)
                                 .flatMapMany(user ->
@@ -81,5 +98,16 @@ public class StoryService {
                         .flatMap(body -> Mono.error(new RuntimeException("Request failed:" + body)));
             }
         });
+    }
+
+    private Flux<Long> generateRandomIds() {
+        Random random = new Random();
+        List<Long> randomUserId = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Long randomNumber = (long) random.nextInt(1, 5);
+            randomUserId.add(randomNumber);
+        }
+
+        return (Flux<Long>) randomUserId;
     }
 }

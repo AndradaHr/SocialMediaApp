@@ -9,15 +9,15 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table
 @Entity
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long messageId;
-    private Long senderId;
-    private Long receiverId;
+    private Long sender;
+    private Long receiver;
     private String content;
     private LocalDateTime timestamp;
     private Boolean isRead;
+    private Boolean IsEdited;
 }

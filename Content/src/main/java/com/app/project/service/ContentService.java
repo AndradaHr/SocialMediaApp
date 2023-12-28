@@ -14,6 +14,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 @Service
 public class ContentService {
     @Autowired
@@ -28,6 +32,18 @@ public class ContentService {
 
     public Flux<ContentResponse> getPosts(Long userId) {
         return getUserFriends(userId)
+                .flatMap(friendId ->
+                        getUser(friendId)
+                                .zipWith(Mono.just(contentRepository.findByUserId(friendId)))
+                                .map(tuple -> {
+                                    User user = tuple.getT1();
+                                    Content content = (Content) tuple.getT2();
+                                    return mapToContentResponse(content, user);
+                                }));
+    }
+
+    public Flux<ContentResponse> getRandomPosts() {
+        return generateRandomIds()
                 .flatMap(friendId ->
                         getUser(friendId)
                                 .zipWith(Mono.just(contentRepository.findByUserId(friendId)))
@@ -80,6 +96,17 @@ public class ContentService {
                         .flatMap(body -> Mono.error(new RuntimeException("Request failed:" + body)));
             }
         });
+    }
+
+    private Flux<Long> generateRandomIds() {
+        Random random = new Random();
+        List<Long> randomUserId = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Long randomNumber = (long) random.nextInt(1, 5);
+            randomUserId.add(randomNumber);
+        }
+
+        return (Flux<Long>) randomUserId;
     }
 }
 

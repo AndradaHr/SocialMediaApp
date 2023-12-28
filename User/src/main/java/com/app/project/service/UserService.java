@@ -123,7 +123,7 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
-        Optional<User> user = userRepository.findByUsername(email);
+        Optional<User> user = userRepository.findByEmail(email);
         return user.orElse(null);
     }
 
@@ -133,7 +133,7 @@ public class UserService {
     }
 
     public User findByPhoneNumber(String phoneNumber) {
-        Optional<User> user = userRepository.findByUsername(phoneNumber);
+        Optional<User> user = userRepository.findByPhoneNumber(phoneNumber);
         return user.orElse(null);
     }
 
