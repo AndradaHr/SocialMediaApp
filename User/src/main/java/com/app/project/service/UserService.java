@@ -137,6 +137,10 @@ public class UserService {
         return user.orElse(null);
     }
 
+    public String getUserBio(Long userId){
+        return userRepository.findByUserId(userId).get().getBio();
+    }
+
     public void forgotPassword(Long userId, String email) {
         Optional<User> user = userRepository.findById(userId);
         sendEmailForForgottenPassword(user.get(), true);

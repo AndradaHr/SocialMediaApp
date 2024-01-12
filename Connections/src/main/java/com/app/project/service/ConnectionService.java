@@ -25,11 +25,21 @@ public class ConnectionService {
     @Autowired
     private WebClient webClient;
 
-    public void addUser(Long userId, List<Long> followingIds) {
+    public void addUser(Long userId, List<Long> followingIds, List<Long> followersIds) {
         Connection user = new Connection();
         user.setUserId(userId);
         user.setFollowing(followingIds);
+        user.setFollowers(followersIds);
         connectionRepository.save(user);
+    }
+
+    public Streaks getUserStreak(Long userId) {
+        int following = getFollowingByUserId(userId).size();
+        int followers = getFollowersByUserId(userId).size();
+        return Streaks.builder()
+                .followers(followers)
+                .following(following)
+                .build();
     }
 
     public List<Long> getFollowingByUserId(Long userId) {
@@ -51,6 +61,30 @@ public class ConnectionService {
         Connection connection = connectionRepository.findByUserId(userId).orElse(null);
         if (connection != null && connection.getFollowing().contains(followingId)) {
             connection.getFollowing().remove(followingId);
+            connectionRepository.delete(connection);
+            connectionRepository.save(connection);
+        }
+    }
+
+    public List<Long> getFollowersByUserId(Long userId) {
+        return connectionRepository.findByUserId(userId)
+                .map(Connection::getFollowers)
+                .orElse(Collections.emptyList());
+    }
+
+    public void addFollower(Long userId, Long followingId) {
+        Connection connection = connectionRepository.findByUserId(userId).orElse(null);
+        if (connection != null && !connection.getFollowers().contains(followingId)) {
+            connection.getFollowers().add(followingId);
+            connectionRepository.delete(connection);
+            connectionRepository.save(connection);
+        }
+    }
+
+    public void removeFollowers(Long userId, Long followingId) {
+        Connection connection = connectionRepository.findByUserId(userId).orElse(null);
+        if (connection != null && connection.getFollowers().contains(followingId)) {
+            connection.getFollowers().remove(followingId);
             connectionRepository.delete(connection);
             connectionRepository.save(connection);
         }

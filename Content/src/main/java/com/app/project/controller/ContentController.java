@@ -3,8 +3,11 @@ package com.app.project.controller;
 import com.app.project.model.Content;
 import com.app.project.service.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/content")
@@ -18,11 +21,19 @@ public class ContentController {
         return contentService.getPosts(userId);
     }
 
+    @GetMapping("/getSections")
+    public List<ContentSection>getSections(){
+        return ContentService.sectionList;
+    }
+
     @GetMapping("/getSuggestedPosts/{userId}")
     public Flux<ContentResponse> getSuggestedPosts(@PathVariable Long userId) {
         return contentService.getSuggestedPosts(userId);
     }
 
-
+    @GetMapping("getUserPosts/{userId}")
+    public ResponseEntity<List<Content>> getUserPosts(@PathVariable Long userId){
+        return ResponseEntity.ok(contentService.getUserPosts(userId));
+    }
 }
 

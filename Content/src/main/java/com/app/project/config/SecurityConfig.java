@@ -12,7 +12,7 @@ public class SecurityConfig {
         ApiJsonWebTokenFilter apiJsonWebTokenFilter = new ApiJsonWebTokenFilter();
         registrationBean.setFilter(apiJsonWebTokenFilter);
         registrationBean.addUrlPatterns("");
-        registrationBean.addInitParameter("excludedPaths", "/api/content/getFeedPosts/*");
+        registrationBean.addInitParameter("excludedPaths", "/api/content/getFeedPosts/*,/api/content/getSections");
 
         return registrationBean;
     }

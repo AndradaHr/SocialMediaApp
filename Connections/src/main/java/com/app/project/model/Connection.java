@@ -1,10 +1,12 @@
 package com.app.project.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -17,6 +19,7 @@ public class Connection {
     private String id;
     private Long userId;
     private List<Long> following;
+    private List<Long> followers;
 
 }
 
