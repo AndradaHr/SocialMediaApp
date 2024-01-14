@@ -25,6 +25,44 @@ public class ConnectionService {
     @Autowired
     private WebClient webClient;
 
+
+    public String getConnectionType(Long userId, Long personId) {
+        List<Long> userFollowers = getFollowersByUserId(userId);
+        List<Long> userFollowing = getFollowingByUserId(userId);
+        List<Long> personFollowers = getFollowersByUserId(personId);
+        List<Long> personFollowing = getFollowingByUserId(personId);
+
+        boolean userFollowsPerson = userFollowing.contains(personId);
+        boolean personFollowsUser = personFollowing.contains(userId);
+
+        if (userFollowsPerson && personFollowsUser) {
+            return "Follow Back";
+        } else if (userFollowsPerson) {
+            return "Following";
+        }
+
+        return "Follow";
+    }
+
+    public void getConnectionTypeAndUpdateConnection(Long userId, Long personId) {
+        List<Long> userFollowers = getFollowersByUserId(userId);
+        List<Long> userFollowing = getFollowingByUserId(userId);
+        List<Long> personFollowers = getFollowersByUserId(personId);
+        List<Long> personFollowing = getFollowingByUserId(personId);
+
+        boolean userFollowsPerson = userFollowing.contains(personId);
+        boolean personFollowsUser = personFollowing.contains(userId);
+
+        if (userFollowsPerson && personFollowsUser) {
+        } else if (userFollowsPerson) {
+            removeFollowing(userId, personId);
+        } else if (personFollowsUser) {
+            addFollowing(userId, personId);
+        } else {
+            addFollowing(userId, personId);
+        }
+    }
+
     public void addUser(Long userId, List<Long> followingIds, List<Long> followersIds) {
         Connection user = new Connection();
         user.setUserId(userId);

@@ -25,8 +25,7 @@ public class User {
     private LocalDate birthdate;
     @NonNull
     private String phoneNumber;
-    private String language = "EN";
-    private Boolean isPrivate = Boolean.TRUE;
-
+    private String language;
+    private Boolean isPrivate;
     private String profilePicture;
 }

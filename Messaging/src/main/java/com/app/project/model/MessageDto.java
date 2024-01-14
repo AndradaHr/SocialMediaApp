@@ -1,5 +1,6 @@
 package com.app.project.model;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,13 +10,10 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class Message {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class MessageDto {
     private Long messageId;
-    private Long senderId;
-    private Long receiverId;
+    private User senderId;
+    private User receiverId;
     private String content;
     private LocalDateTime timestamp;
     private Boolean isRead;

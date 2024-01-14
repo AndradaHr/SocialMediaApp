@@ -75,4 +75,14 @@ public class ConnectionController {
     public Flux<User> getNoFollowingSuggestedFriends() {
         return userService.getRandomUsers();
     }
+
+    @GetMapping("/getConnectionType/{userId1}/{userId2}")
+    public String getConnectionType(@PathVariable Long userId1, @PathVariable Long userId2){
+        return userService.getConnectionType(userId1, userId2);
+    }
+
+    @PostMapping("/getConnectionTypeAndUpdateConnection/{userId1}/{userId2}")
+    public void getConnectionTypeAndUpdateConnection(@PathVariable Long userId1, @PathVariable Long userId2){
+         userService.getConnectionTypeAndUpdateConnection(userId1, userId2);
+    }
 }
