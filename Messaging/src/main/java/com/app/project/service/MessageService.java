@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,15 @@ public class MessageService {
 
     public List<Message> getMessagesBetweenUsers(Long senderId, Long receiverId) {
         return messageRepository.findBySenderIdAndReceiverId(senderId, receiverId);
+    }
+
+    public Long[] getUserIdsForMessage(Long messageId) {
+        // Assuming you have a method to retrieve a message by its ID
+        Message message = messageRepository.findById(messageId).get();
+        if (message != null) {
+            return new Long[]{message.getSenderId(), message.getReceiverId()};
+        }
+        return new Long[0]; // Return an empty array if the message is not found
     }
 
     public Message updateMessageReadStatus(Long messageId, Boolean isRead) {
@@ -51,8 +61,15 @@ public class MessageService {
         messageRepository.deleteById(messageId);
     }
 
-    public Message saveMessage(Message message) {
-        return messageRepository.save(message);
+    public void saveMessage(Message message) {
+        Message message1= new Message();
+        message1.setIsEdited(false);
+        message1.setSenderId(message.getSenderId());
+        message1.setReceiverId(message.getReceiverId());
+        message1.setIsRead(false);
+        message1.setContent(message.getContent());
+        message1.setTimestamp(LocalDateTime.now());
+        messageRepository.save(message1);
     }
 
     public List<MessageDto> getPersonConversations(Long userId) {

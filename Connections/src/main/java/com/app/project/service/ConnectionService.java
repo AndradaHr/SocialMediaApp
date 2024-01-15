@@ -54,12 +54,31 @@ public class ConnectionService {
         boolean personFollowsUser = personFollowing.contains(userId);
 
         if (userFollowsPerson && personFollowsUser) {
+            removeFollowing(userId, personId);
+            removeFollowers(personId,userId);
         } else if (userFollowsPerson) {
             removeFollowing(userId, personId);
+            removeFollowers(personId,userId);
         } else if (personFollowsUser) {
             addFollowing(userId, personId);
+            if (connectionRepository.findByUserId(personId).isEmpty()) {
+                addUser(personId, List.of(), List.of(userId));
+            } else {
+                addFollowing(personId, userId);
+                addFollowing(userId,personId);
+            }
+
         } else {
-            addFollowing(userId, personId);
+            if (connectionRepository.findByUserId(userId).isEmpty()){
+                addUser(userId,List.of(personId), List.of());
+            } else{
+                addFollowing(userId, personId);
+            }
+                if (connectionRepository.findByUserId(personId).isEmpty()) {
+                addUser(personId, List.of(), List.of(userId));
+            } else {
+                addFollower(personId, userId);
+            }
         }
     }
 

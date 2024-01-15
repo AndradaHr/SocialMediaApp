@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,32 +21,50 @@ import java.util.List;
 public class WebSocketController {
 
     private final MessageService messageService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    public WebSocketController(MessageService messageService) {
+    public WebSocketController(MessageService messageService, SimpMessagingTemplate messagingTemplate) {
         this.messageService = messageService;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @MessageMapping("/sendMessage")
     @SendTo("/topic/messages")
-    public Message sendMessage(@Payload Message message) {
+    public void sendMessage(@Payload Message message) {
         messageService.saveMessage(message);
-        return message;
+        // Send to the sender
+        messagingTemplate.convertAndSendToUser(message.getSenderId().toString(), "/queue/reply", message);
+        // Send to the recipient
+        messagingTemplate.convertAndSendToUser(message.getReceiverId().toString(), "/queue/reply", message);
     }
 
     @MessageMapping("/updateReadStatus")
     public void updateReadStatus(@Payload ReadStatusUpdate update) {
         messageService.updateMessageReadStatus(update.getMessageId(), update.getIsRead());
+        // Assuming you have a method to get the sender and receiver ID for the message
+        Long[] userIds = messageService.getUserIdsForMessage(update.getMessageId());
+        for (Long userId : userIds) {
+            messagingTemplate.convertAndSendToUser(userId.toString(), "/queue/readStatus", update);
+        }
     }
 
     @MessageMapping("/updateMessageContent")
     public void updateMessageContent(@Payload MessageContentUpdate update) {
         messageService.updateMessageContent(update.getMessageId(), update.getNewContent());
+        Long[] userIds = messageService.getUserIdsForMessage(update.getMessageId());
+        for (Long userId : userIds) {
+            messagingTemplate.convertAndSendToUser(userId.toString(), "/queue/contentUpdate", update);
+        }
     }
 
     @MessageMapping("/deleteMessage")
     public void deleteMessage(@Payload MessageDelete delete) {
         messageService.deleteMessage(delete.getMessageId());
+        Long[] userIds = messageService.getUserIdsForMessage(delete.getMessageId());
+        for (Long userId : userIds) {
+            messagingTemplate.convertAndSendToUser(userId.toString(), "/queue/deleteMessage", delete);
+        }
     }
 
     @GetMapping("/getPersonConversations/{userId}")

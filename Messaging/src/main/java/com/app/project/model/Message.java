@@ -1,7 +1,13 @@
 package com.app.project.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +24,6 @@ public class Message {
     private Long receiverId;
     private String content;
     private LocalDateTime timestamp;
-    private Boolean isRead;
-    private Boolean IsEdited;
+    private Boolean isRead = false;
+    private Boolean IsEdited = false;
 }
